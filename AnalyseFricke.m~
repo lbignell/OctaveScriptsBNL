@@ -1,0 +1,79 @@
+[WL, Baseline1] = textread ("WaterBaseline_141119.txt" , "%f %f", "headerlines", 2);
+[WL, Baseline2] = textread ("WaterBaseline_2_141119.txt" , "%f %f", "headerlines", 2);
+[WL, Baseline3] = textread ("WaterBaseline_3_141119.txt" , "%f %f", "headerlines", 2);
+[WL, REF1] = textread ("F_REF1_141119.txt" , "%f %f", "headerlines", 2);
+[WL, REF2] = textread ("F_REF2_141119.txt" , "%f %f", "headerlines", 2);
+[WL, REF3] = textread ("F_REF3_141119.txt" , "%f %f", "headerlines", 2);
+%[WL, REF4] = textread ("F_REF4_141119.txt" , "%f %f", "headerlines", 2);
+[WL, FPMT1] = textread ("F_FPMT1_141119.txt" , "%f %f", "headerlines", 2);
+[WL, FPMT2] = textread ("F_FPMT2_141119.txt" , "%f %f", "headerlines", 2);
+[WL, RPMT1] = textread ("F_RPMT1_141119.txt" , "%f %f", "headerlines", 2);
+[WL, RPMT2] = textread ("F_RPMT2_141119.txt" , "%f %f", "headerlines", 2);
+[WL, F_1F24] = textread ("F_1F24_141119.txt" , "%f %f", "headerlines", 2);
+[WL, F_1R24] = textread ("F_1R24_141119.txt" , "%f %f", "headerlines", 2);
+[WL, F_2F24] = textread ("F_2F24_141119.txt" , "%f %f", "headerlines", 2);
+[WL, F_2R24] = textread ("F_2R24_141119.txt" , "%f %f", "headerlines", 2);
+[WL, F_3F24] = textread ("F_3F24_141119.txt" , "%f %f", "headerlines", 2);
+[WL, F_3R24] = textread ("F_3R24_141119.txt" , "%f %f", "headerlines", 2);
+[WL, F_4F24] = textread ("F_4F24_141119.txt" , "%f %f", "headerlines", 2);
+[WL_2, F_4R24] = textread ("F_4R24_141119.txt" , "%f %f", "headerlines", 2);
+
+%Take the average value in the range 460:485 nm and subtract this globally from the data.
+%This corresponds to the range WL(261:286).
+Baseline1 = Baseline1 - mean(Baseline1(261:286));
+Baseline2 = Baseline2 - mean(Baseline2(261:286));
+Baseline3 = Baseline3 - mean(Baseline3(261:286));
+REF1 = REF1 - mean(REF1(261:286));
+REF2 = REF2 - mean(REF2(261:286));
+REF3 = REF3 - mean(REF3(261:286));
+%REF4 = REF4 - mean(REF4(261:286));
+FPMT1 = FPMT1 - mean(FPMT1(261:286));
+FPMT2 = FPMT2 - mean(FPMT2(261:286));
+RPMT1 = RPMT1 - mean(RPMT1(261:286));
+RPMT2 = RPMT2 - mean(RPMT2(261:286));
+F_1F24 = F_1F24 - mean(F_1F24(261:286));
+F_1R24 = F_1R24 - mean(F_1R24(261:286));
+F_2F24 = F_2F24 - mean(F_2F24(261:286));
+F_2R24 = F_2R24 - mean(F_2R24(261:286));
+F_3F24 = F_3F24 - mean(F_3F24(261:286));
+F_3R24 = F_3R24 - mean(F_3R24(261:286));
+F_4F24 = F_4F24 - mean(F_4F24(261:286));
+F_4R24 = F_4R24 - mean(F_4R24(261:286));
+
+figure;
+hold on;
+plot(WL, Baseline1, 'k');
+plot(WL, Baseline2, 'k');
+plot(WL, Baseline3, 'k');
+plot(WL, REF1, 'r');
+plot(WL, REF2, 'g');
+plot(WL, REF3, 'b');
+%plot(WL, REF4, 'k');
+plot(WL, FPMT1, 'r');
+plot(WL, FPMT2, 'g');
+plot(WL, RPMT1, 'b');
+plot(WL, RPMT1, 'k');
+plot(WL, F_1F24, 'r');
+plot(WL, F_1R24, 'g');
+plot(WL, F_2F24, 'b');
+plot(WL, F_2R24, 'k');
+plot(WL, F_3F24, 'm');
+plot(WL, F_3R24, 'y');
+plot(WL, F_4F24, 'c');
+plot(WL_2, F_4R24, 'k:');
+
+%Calculate doses
+BaselineDose = (REF1(106) + REF2(106))./2;
+D_1F24 = F_1F24(106) - BaselineDose;
+D_1R24 = F_1R24(106) - BaselineDose;
+D_2F24 = F_2F24(106) - BaselineDose;
+D_2R24 = F_2R24(106) - BaselineDose;
+D_3F24 = F_3F24(106) - BaselineDose;
+D_3R24 = F_3R24(106) - BaselineDose;
+D_4F24 = F_4F24(106) - BaselineDose;
+D_4R24 = F_4R24(106) - BaselineDose;
+D_FPMT1 = FPMT1(106) - BaselineDose;
+D_FPMT2 = FPMT2(106) - BaselineDose;
+D_RPMT1 = RPMT1(106) - BaselineDose;
+D_RPMT2 = RPMT2(106) - BaselineDose;
+

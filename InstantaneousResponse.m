@@ -1,0 +1,41 @@
+%This function will take a single event's signal, apply a filter to eliminate high frequency noise components,
+%smooth the data to give the correct time response, and return the ratio of Ch1 to Ch3, Ch2 to Ch3, and Ch1 to Ch2.
+%I should also return the filtered/smoothed waveforms.
+
+function [ratio13, ratio23, ratio12, filterCh1, filterCh2, filterCh3] = InstantaneousResponse(filename, fcutoff, numavg)
+  %Get the data
+  [ch1, ch2, ch3, ch4] = GetData(filename);
+
+  ch1 = ch1 - mean([ch1(1:501); ch1(9500:10000)]);
+  ch2 = ch2 - mean([ch2(1:501); ch2(9500:10000)]);
+  ch3 = ch3 - mean([ch3(1:501); ch3(9500:10000)]);
+
+  %I could implement a shift here to account for any delay, but I don't want to: on the time scales I'm working on, propagation delays should be negligible!
+
+  %The filter cutoff needs to be set like so:
+  fsampling = 10000;
+  %Make a Chebyshev type 2 (maximally flat but steeper rolloff than butterworth) filter with cutoff freq at fcutoff:
+  %Arguments: order, decibels of stopband attenuation, normalised cutoff frequency.
+  [B, A] = cheby2(3, 60, fcutoff/(0.5*fsampling), 'low');
+	%  [B, A] = cheby2(3, 60, [10/(0.5*fsampling), fcutoff/(0.5*fsampling)]);%, 'band');
+
+  %To apply a filter just to filtered_wfm = filter(b,a,unfiltered_wfm);
+  fCh1 = filter(B,A,ch1);
+  fCh2 = filter(B,A,ch2);
+  fCh3 = filter(B,A,ch3);
+
+  %Offset correct
+  fCh1 = fCh1 - mean(fCh1(9500:10000));
+  fCh2 = fCh2 - mean(fCh2(9500:10000));
+  fCh3 = fCh3 - mean(fCh3(9500:10000));
+
+  %Apply smoothing.
+  filterCh1 = filter(ones(numavg,1)/numavg, 1, fCh1);
+  filterCh2 = filter(ones(numavg,1)/numavg, 1, fCh2);
+  filterCh3 = fCh3;%filter(ones(numavg,1)/numavg, 1, fCh3);
+
+  ratio13 = filterCh1./filterCh3;
+  ratio23 = filterCh2./filterCh3;
+  ratio12 = filterCh1./filterCh2;
+
+end
